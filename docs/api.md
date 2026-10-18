@@ -1,6 +1,6 @@
-# SehatFlow AI — REST API Reference Guide
+# Swastik Health — REST API Reference Guide
 
-The SehatFlow AI backend is implemented in Python FastAPI with Pydantic v2 schemas and SQLAlchemy 2.0 ORM.
+The Swastik Health backend is implemented in Python FastAPI with Pydantic v2 schemas and SQLAlchemy 2.0 ORM.
 
 Interactive documentation:
 - Swagger UI: `http://localhost:8000/api/docs`
@@ -15,7 +15,7 @@ Health probe and environment verification.
 ```json
 {
   "status": "healthy",
-  "service": "SehatFlow AI Backend",
+  "service": "Swastik Health Backend",
   "environment": "DEMO ENVIRONMENT — SYNTHETIC DATA",
   "timestamp": "2026-10-18T05:30:00Z",
   "version": "1.0.0"

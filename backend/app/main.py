@@ -20,8 +20,8 @@ with next(get_db()) as db_session:
     seed_database(db_session)
 
 app = FastAPI(
-    title="SehatFlow AI API",
-    description="Proactive AI-Driven Health Center and Medicine Supply Chain Management Platform",
+    title="Swastik Health API",
+    description="AI-Powered Healthcare Management Platform",
     version="1.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc"
@@ -42,7 +42,7 @@ app.add_middleware(
 def health_check():
     return {
         "status": "healthy",
-        "service": "SehatFlow AI Backend",
+        "service": "Swastik Health Backend",
         "environment": "DEMO ENVIRONMENT — SYNTHETIC DATA",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "version": "1.0.0"
@@ -365,9 +365,12 @@ def list_activities(
 
 
 # ----------------- STATIC FRONTEND SERVING -----------------
-frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist"))
+default_frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist"))
+frontend_dist = os.getenv("FRONTEND_DIST_DIR", default_frontend_dist)
 if os.path.exists(frontend_dist):
-    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    assets_dir = os.path.join(frontend_dist, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
 
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_frontend(full_path: str):

@@ -1,4 +1,4 @@
-# SehatFlow AI — Smart Health & Medicine Supply Chain Platform
+# Swastik Health — AI-Powered Healthcare Management
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React_18_%2B_Vite-61DAFB?style=flat&logo=react)](https://react.dev)
@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **DEMO ENVIRONMENT — SYNTHETIC DATA DISCLAIMER**
-> SehatFlow AI is a functional engineering prototype designed for the Smart Health AI Hackathon. All facility names, patient tokens, doctor attendance records, and inventory figures are synthetically generated for demonstration. No real personal health information (PHI) is processed or retained.
+> Swastik Health is a functional engineering prototype designed for the Hack2Skill PromptWars × VelonX Hackathon. All facility names, patient tokens, doctor attendance records, and inventory figures are synthetically generated for demonstration. No real personal health information (PHI) is processed or retained.
 
 ---
 
@@ -23,7 +23,7 @@ Primary Health Centres (PHCs) and Community Health Centres (CHCs) frequently exp
 - **Clinician absenteeism blindspots**: Uncoordinated shift attendance delays emergency response.
 
 ### Our Solution
-**SehatFlow AI** is a proactive healthcare resource intelligence and medicine supply chain management platform. It shifts healthcare administrators from **reactive firefighting** to **proactive decision support**:
+**Swastik Health** is an AI-powered healthcare management platform. It shifts healthcare administrators from **reactive firefighting** to **proactive decision support**:
 1. **Explainable Demand Forecasting**: Uses weighted moving average heuristics and replenishment lead times to calculate exact days-until-stockout and recommend reorder quantities before stockouts occur.
 2. **Atomic Inter-Facility Redistribution**: Enables district coordinators to transfer surplus medicines between facilities in three clicks with atomic double-entry ledger verification.
 3. **Operational Command Cockpit**: Real-time telemetry across anonymized patient queues, interactive ward bed maps, and clinician duty rosters.
@@ -70,7 +70,7 @@ Primary Health Centres (PHCs) and Community Health Centres (CHCs) frequently exp
 ## 4. System Architecture
 
 ```
-sehatflow-ai/
+swastik-health/
 ├── backend/
 │   ├── app/
 │   │   ├── __init__.py
@@ -120,8 +120,8 @@ sehatflow-ai/
 
 ### Step 1: Clone or Open the Repository
 ```bash
-git clone https://github.com/your-username/sehatflow-ai.git
-cd sehatflow-ai
+git clone https://github.com/pawanprakharjain-code/swastik-health.git
+cd swastik-health
 ```
 
 ### Step 2: Set Up Backend

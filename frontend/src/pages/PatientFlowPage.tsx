@@ -189,7 +189,7 @@ export const PatientFlowPage: React.FC<PatientFlowPageProps> = ({
               In accordance with ethical healthcare standards, this demonstration platform uses <strong>strictly anonymized tokens</strong> (e.g. T-1021). No names, telephone numbers, Aadhaar numbers, or medical records are stored.
             </p>
             <div className="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 font-medium">
-              ⚠️ Triage priority remains solely with certified clinical officers. SehatFlow does not provide autonomous diagnostic decisions.
+              ⚠️ Triage priority remains solely with certified clinical officers. Swastik Health does not provide autonomous diagnostic decisions.
             </div>
           </div>
 

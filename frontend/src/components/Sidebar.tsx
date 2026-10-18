@@ -79,10 +79,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             <div>
               <div className="font-extrabold text-white text-base tracking-tight leading-tight">
-                SehatFlow <span className="text-teal-400">AI</span>
+                Swastik <span className="text-teal-400">Health</span>
               </div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Smart Health Ops
+              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                AI-Powered Healthcare Management
               </div>
             </div>
           </div>

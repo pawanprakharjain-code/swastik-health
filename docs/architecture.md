@@ -1,6 +1,6 @@
-# SehatFlow AI — Technical Architecture & System Design
+# Swastik Health — Technical Architecture & System Design
 
-SehatFlow AI is designed as a modular, responsive healthcare resource intelligence and medicine supply chain management platform. It addresses the critical operational friction experienced by primary, community, and district healthcare facilities.
+Swastik Health is an AI-powered healthcare management platform. It addresses the critical operational friction experienced by primary, community, and district healthcare facilities.
 
 ---
 
@@ -61,7 +61,7 @@ The inter-facility stock transfer workflow ensures atomic consistency across hea
 sequenceDiagram
     autonumber
     actor Officer as District Supply Coordinator
-    participant Web as SehatFlow UI
+    participant Web as Swastik Health UI
     participant API as FastAPI Router
     participant CRUD as Transfer Service
     participant DB as Database Transaction

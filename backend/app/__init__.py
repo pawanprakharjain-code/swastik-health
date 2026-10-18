@@ -1,5 +1,5 @@
 """
-SehatFlow AI - Smart Health & Medicine Supply Chain Platform
+Swastik Health - AI-Powered Healthcare Management
 Backend Application Package
 """
 __version__ = "1.0.0"

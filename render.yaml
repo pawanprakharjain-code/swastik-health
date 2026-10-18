@@ -1,7 +1,7 @@
 services:
   # Backend API Service
   - type: web
-    name: sehatflow-backend
+    name: swastik-health-backend
     env: python
     buildCommand: pip install -r backend/requirements.txt
     startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
@@ -16,7 +16,7 @@ services:
 
   # Frontend Web Service (Static Site)
   - type: static
-    name: sehatflow-frontend
+    name: swastik-health-frontend
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     routes:
@@ -25,4 +25,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://sehatflow-backend.onrender.com
+        value: https://swastik-health-backend.onrender.com

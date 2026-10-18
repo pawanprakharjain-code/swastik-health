@@ -75,7 +75,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           <span>MANDATORY HACKATHON DISCLAIMER — SYNTHETIC DEMONSTRATION DATA</span>
         </div>
         <p>
-          SehatFlow AI is an engineering proof-of-concept prototype built for the Smart Health Hackathon problem statement. All healthcare facilities, patient queue tokens, doctor rosters, inventory counts, and medicine consumption histories in this application are <strong>synthetically generated for demonstration</strong>.
+          Swastik Health is an engineering proof-of-concept prototype built for the Hack2Skill PromptWars × VelonX hackathon. All healthcare facilities, patient queue tokens, doctor rosters, inventory counts, and medicine consumption histories in this application are <strong>synthetically generated for demonstration</strong>.
         </p>
         <p className="text-amber-800">
           This system does NOT connect to live hospital information systems (HIS/EMR) or real patient health records. No real personal health information (PHI) is processed or retained. Clinical diagnosis and triage priority decisions remain exclusively with certified healthcare personnel.

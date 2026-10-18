@@ -36,7 +36,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
 
   const exportCSV = (type: string) => {
     let rows: string[][] = [];
-    let filename = `sehatflow-${type}-${new Date().toISOString().slice(0, 10)}.csv`;
+    let filename = `swastik-health-${type}-${new Date().toISOString().slice(0, 10)}.csv`;
 
     if (type === 'inventory') {
       rows = [
@@ -165,7 +165,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
         <div className="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <div className="text-xs font-bold text-teal-700 uppercase tracking-wider">
-              SehatFlow AI · Official Operational Report
+              Swastik Health · Official Operational Report
             </div>
             <h3 className="text-lg font-black text-slate-900 mt-1 capitalize">
               {activeReport.replace('-', ' ')} Summary

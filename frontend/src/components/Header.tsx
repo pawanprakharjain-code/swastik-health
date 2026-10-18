@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <div>
           <div className="text-[11px] font-semibold text-slate-400 tracking-tight">
-            SehatFlow AI / <span className="text-slate-600">{pageTitle}</span>
+            Swastik Health / <span className="text-slate-600">{pageTitle}</span>
           </div>
           <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
             {pageTitle}

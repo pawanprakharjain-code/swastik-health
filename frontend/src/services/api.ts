@@ -40,7 +40,7 @@ async function fetchJSON<T>(endpoint: string, options?: RequestInit): Promise<T>
 
     return await res.json();
   } catch (err: any) {
-    console.warn(`[SehatFlow API] Network call to ${endpoint} failed:`, err.message);
+    console.warn(`[Swastik Health API] Network call to ${endpoint} failed:`, err.message);
     throw err;
   }
 }

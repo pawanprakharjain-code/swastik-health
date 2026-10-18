@@ -1,4 +1,4 @@
-# SehatFlow AI — Hackathon Presentation & Demonstration Dossier
+# Swastik Health — Hackathon Presentation & Demonstration Dossier
 
 ---
 
@@ -8,7 +8,7 @@
 
 **Value Proposition:** Primary and Community Health Centres (PHCs and CHCs) frequently suffer from avoidable medicine stock-outs, uncoordinated patient queues, unknown bed capacities, and doctor attendance blindspots. Existing systems are reactive—staff only notice a stockout when a patient is standing in front of an empty pharmacy shelf.
 
-**Our Solution:** **SehatFlow AI** shifts health operations from **reactive crisis firefighting** to **proactive decision support**. It continuously monitors multi-facility inventory, predicts consumption rates weeks ahead, detects impending shortages before lead times expire, and automates atomic inter-facility stock redistribution.
+**Our Solution:** **Swastik Health** shifts health operations from **reactive crisis firefighting** to **proactive decision support**. It continuously monitors multi-facility inventory, predicts consumption rates weeks ahead, detects impending shortages before lead times expire, and automates atomic inter-facility stock redistribution.
 
 ---
 
@@ -18,17 +18,17 @@
 >
 > *This happens every single day in public healthcare not because medicines don't exist in the district, but because of poor visibility, zero demand forecasting, and siloed facilities.*
 >
-> *Meet **SehatFlow AI**—a proactive, AI-driven healthcare center and supply chain management platform.*
+> *Meet **Swastik Health**—an AI-powered healthcare management platform.*
 >
-> *Instead of waiting for shelves to empty, SehatFlow AI continuously monitors dispensing velocity, applies an explainable weighted moving-average demand model, and flags critical stockouts days before replenishment lead times run out.*
+> *Instead of waiting for shelves to empty, Swastik Health continuously monitors dispensing velocity, applies an explainable weighted moving-average demand model, and flags critical stockouts days before replenishment lead times run out.*
 >
-> *When PHC Ramgarh faces a shortage of Amoxicillin, SehatFlow detects that nearby CHC Balrampur has surplus stock. In just three clicks, a transfer request is created, verified, and approved with atomic double-entry ledger security.*
+> *When PHC Ramgarh faces a shortage of Amoxicillin, Swastik Health detects that nearby CHC Balrampur has surplus stock. In just three clicks, a transfer request is created, verified, and approved with atomic double-entry ledger security.*
 >
-> *Beyond supply chain, SehatFlow gives facility administrators a real-time operational cockpit: anonymized patient queues, live ward bed status with one-tap turnaround, clinician attendance tracking, and downloadable audit reports.*
+> *Beyond supply chain, Swastik Health gives facility administrators a real-time operational cockpit: anonymized patient queues, live ward bed status with one-tap turnaround, clinician attendance tracking, and downloadable audit reports.*
 >
 > *Everything you see today is a fully working, tested full-stack web application—built with FastAPI, SQLAlchemy, React, Vite, and Tailwind CSS—with 14 automated backend tests passing.*
 >
-> *SehatFlow AI: saving lives by delivering the right medicine to the right health center before the shelf goes empty. Thank you."*
+> *Swastik Health: saving lives by delivering the right medicine to the right health center before the shelf goes empty. Thank you."*
 
 ---
 
@@ -47,7 +47,7 @@
 
 ## 4. Forecasting Algorithm Mechanics & Explainability
 
-Traditional black-box machine learning models fail in public health deployments because doctors and supply officers do not trust unexplainable predictions. SehatFlow AI uses a **transparent, calibrated heuristic engine**:
+Traditional black-box machine learning models fail in public health deployments because doctors and supply officers do not trust unexplainable predictions. Swastik Health uses a **transparent, calibrated heuristic engine**:
 
 $$R_{\text{daily}} = 0.50 \cdot \bar{D}_{\text{week 1}} + 0.30 \cdot \bar{D}_{\text{week 2}} + 0.20 \cdot \bar{D}_{\text{week 3}}$$
 

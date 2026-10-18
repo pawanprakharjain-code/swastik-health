@@ -320,7 +320,7 @@ export const App: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `sehatflow-consolidated-telemetry-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `swastik-health-consolidated-telemetry-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
     showToast('Consolidated CSV exported successfully.');
