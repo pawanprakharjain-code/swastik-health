@@ -44,6 +44,33 @@ def get_medicine_status(med: models.Medicine) -> str:
         return "Watch"
     return "Healthy"
 
+def format_medicine_out(med: models.Medicine) -> schemas.MedicineOut:
+    today = date.today()
+    st = get_medicine_status(med)
+    days_exp = (med.expiry_date - today).days
+    is_near_exp = 0 <= days_exp <= 60
+    days_out = round(med.current_stock / max(0.1, med.avg_daily_consumption), 1) if med.avg_daily_consumption > 0 else 999.0
+
+    return schemas.MedicineOut(
+        id=med.id,
+        facility_id=med.facility_id,
+        name=med.name,
+        generic_name=med.generic_name,
+        category=med.category,
+        batch_number=med.batch_number,
+        current_stock=med.current_stock,
+        unit=med.unit,
+        min_threshold=med.min_threshold,
+        avg_daily_consumption=med.avg_daily_consumption,
+        lead_time_days=med.lead_time_days,
+        supplier=med.supplier,
+        expiry_date=med.expiry_date,
+        last_updated=med.last_updated,
+        status=st,
+        days_until_stockout=days_out,
+        is_near_expiry=is_near_exp
+    )
+
 def get_medicines(
     db: Session,
     facility_id: Optional[str] = None,
@@ -76,7 +103,6 @@ def get_medicines(
         st = get_medicine_status(med)
         days_exp = (med.expiry_date - today).days
         is_near_exp = 0 <= days_exp <= 60
-        days_out = round(med.current_stock / max(0.1, med.avg_daily_consumption), 1) if med.avg_daily_consumption > 0 else 999.0
 
         if status_filter and status_filter != "All":
             if status_filter == "Near Expiry" and not is_near_exp:
@@ -84,25 +110,7 @@ def get_medicines(
             elif status_filter != "Near Expiry" and st != status_filter:
                 continue
 
-        result.append(schemas.MedicineOut(
-            id=med.id,
-            facility_id=med.facility_id,
-            name=med.name,
-            generic_name=med.generic_name,
-            category=med.category,
-            batch_number=med.batch_number,
-            current_stock=med.current_stock,
-            unit=med.unit,
-            min_threshold=med.min_threshold,
-            avg_daily_consumption=med.avg_daily_consumption,
-            lead_time_days=med.lead_time_days,
-            supplier=med.supplier,
-            expiry_date=med.expiry_date,
-            last_updated=med.last_updated,
-            status=st,
-            days_until_stockout=days_out,
-            is_near_expiry=is_near_exp
-        ))
+        result.append(format_medicine_out(med))
     return result
 
 def get_medicine_by_id(db: Session, medicine_id: str) -> Optional[models.Medicine]:
@@ -655,27 +663,27 @@ def get_dashboard_summary(db: Session, facility_id: Optional[str] = None) -> sch
     pq_q = db.query(models.PatientQueue)
     if facility_id:
         pq_q = pq_q.filter(models.PatientQueue.facility_id == facility_id)
-    patients = pq_q.all()
-    total_patients_today = len(patients)
-    waiting_patients = sum(1 for p in patients if p.queue_status == "Waiting")
-    avg_wait = round(sum(p.estimated_wait_minutes for p in patients) / max(1, total_patients_today)) if patients else 15
+    total_patients_today = pq_q.count()
+    waiting_patients = pq_q.filter(models.PatientQueue.queue_status == "Waiting").count()
+    avg_wait_val = db.query(func.avg(models.PatientQueue.estimated_wait_minutes))
+    if facility_id:
+        avg_wait_val = avg_wait_val.filter(models.PatientQueue.facility_id == facility_id)
+    avg_wait = round(avg_wait_val.scalar() or 15)
 
     bed_q = db.query(models.Bed)
     if facility_id:
         bed_q = bed_q.filter(models.Bed.facility_id == facility_id)
-    beds = bed_q.all()
-    total_beds = len(beds)
-    occupied_beds = sum(1 for b in beds if b.status == "Occupied")
-    available_beds = sum(1 for b in beds if b.status == "Available")
-    cleaning_beds = sum(1 for b in beds if b.status == "Cleaning")
+    total_beds = bed_q.count()
+    occupied_beds = bed_q.filter(models.Bed.status == "Occupied").count()
+    available_beds = bed_q.filter(models.Bed.status == "Available").count()
+    cleaning_beds = bed_q.filter(models.Bed.status == "Cleaning").count()
     occupancy_rate = round((occupied_beds / max(1, total_beds)) * 100, 1)
 
     doc_q = db.query(models.Doctor)
     if facility_id:
         doc_q = doc_q.filter(models.Doctor.facility_id == facility_id)
-    docs = doc_q.all()
-    docs_rostered = len(docs)
-    docs_present = sum(1 for d in docs if d.is_present)
+    docs_rostered = doc_q.count()
+    docs_present = doc_q.filter(models.Doctor.is_present == True).count()
     docs_absent = docs_rostered - docs_present
 
     pending_trf_q = db.query(models.StockTransfer).filter(models.StockTransfer.status == "Pending")

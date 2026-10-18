@@ -118,6 +118,7 @@ export const ForecastingPage: React.FC<ForecastingPageProps> = ({
             step="0.5"
             value={safetyDays}
             onChange={(e) => handleSafetyChange(Number(e.target.value))}
+            aria-label="Safety buffer in days"
             className="w-full accent-teal-600 cursor-pointer mt-2"
           />
           <span className="text-[10px] text-slate-400 mt-1">Slide to adjust buffer days</span>

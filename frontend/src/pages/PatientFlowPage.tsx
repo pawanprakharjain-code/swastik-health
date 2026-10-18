@@ -207,6 +207,7 @@ export const PatientFlowPage: React.FC<PatientFlowPageProps> = ({
             <select
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
+              aria-label="Filter queue by clinical department"
               className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               {departments.map((d) => (
@@ -219,6 +220,7 @@ export const PatientFlowPage: React.FC<PatientFlowPageProps> = ({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              aria-label="Filter queue by consultation status"
               className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               <option value="All">All Queue Statuses</option>

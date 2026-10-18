@@ -34,7 +34,7 @@ class Medicine(Base):
     facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     name = Column(String(120), nullable=False)
     generic_name = Column(String(120), nullable=False)
-    category = Column(String(60), nullable=False)
+    category = Column(String(60), nullable=False, index=True)
     batch_number = Column(String(60), nullable=False)
     current_stock = Column(Integer, default=0)
     unit = Column(String(30), default="Units")
@@ -42,7 +42,7 @@ class Medicine(Base):
     avg_daily_consumption = Column(Float, default=5.0)
     lead_time_days = Column(Integer, default=4)
     supplier = Column(String(120), default="State Central Medical Supplies")
-    expiry_date = Column(Date, nullable=False)
+    expiry_date = Column(Date, nullable=False, index=True)
     last_updated = Column(DateTime, default=utcnow, onupdate=utcnow)
 
     facility = relationship("Facility", back_populates="medicines")
@@ -55,14 +55,14 @@ class StockMovement(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     medicine_id = Column(String(50), ForeignKey("medicines.id"), nullable=False, index=True)
-    facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False)
+    facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     movement_type = Column(String(30), nullable=False)
     quantity = Column(Integer, nullable=False)
     previous_stock = Column(Integer, nullable=False)
     new_stock = Column(Integer, nullable=False)
     reason = Column(String(255), nullable=False)
     reference_id = Column(String(100), nullable=True)
-    timestamp = Column(DateTime, default=utcnow)
+    timestamp = Column(DateTime, default=utcnow, index=True)
 
     medicine = relationship("Medicine", back_populates="stock_movements")
 
@@ -72,7 +72,7 @@ class ConsumptionHistory(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     medicine_id = Column(String(50), ForeignKey("medicines.id"), nullable=False, index=True)
-    facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False)
+    facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     record_date = Column(Date, nullable=False, index=True)
     quantity_consumed = Column(Integer, default=0)
 
@@ -87,7 +87,7 @@ class PatientQueue(Base):
     facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     department = Column(String(60), nullable=False)
     arrival_time = Column(DateTime, default=utcnow)
-    queue_status = Column(String(30), default="Waiting")
+    queue_status = Column(String(30), default="Waiting", index=True)
     priority = Column(String(30), default="Routine")
     assigned_service_area = Column(String(60), default="Room 1")
     estimated_wait_minutes = Column(Integer, default=15)
@@ -103,7 +103,7 @@ class Bed(Base):
     facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     bed_number = Column(String(20), nullable=False)
     ward = Column(String(60), nullable=False)
-    status = Column(String(30), default="Available")
+    status = Column(String(30), default="Available", index=True)
     last_updated = Column(DateTime, default=utcnow, onupdate=utcnow)
 
     facility = relationship("Facility", back_populates="beds")
@@ -117,7 +117,7 @@ class Doctor(Base):
     name = Column(String(100), nullable=False)
     department = Column(String(60), nullable=False)
     shift = Column(String(60), default="Morning (08:00–14:00)")
-    is_present = Column(Boolean, default=True)
+    is_present = Column(Boolean, default=True, index=True)
     notes = Column(String(255), nullable=True)
     last_updated = Column(DateTime, default=utcnow, onupdate=utcnow)
 
@@ -128,12 +128,12 @@ class StockTransfer(Base):
     __tablename__ = "stock_transfers"
 
     id = Column(String(60), primary_key=True, index=True)
-    medicine_id = Column(String(50), ForeignKey("medicines.id"), nullable=False)
+    medicine_id = Column(String(50), ForeignKey("medicines.id"), nullable=False, index=True)
     medicine_name = Column(String(120), nullable=False)
-    source_facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False)
-    destination_facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False)
+    source_facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
+    destination_facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     quantity = Column(Integer, nullable=False)
-    status = Column(String(30), default="Pending")
+    status = Column(String(30), default="Pending", index=True)
     notes = Column(Text, nullable=True)
     requested_by = Column(String(100), default="Facility Pharmacist")
     approved_by = Column(String(100), nullable=True)
@@ -147,13 +147,13 @@ class Alert(Base):
     id = Column(String(50), primary_key=True, index=True)
     facility_id = Column(String(50), ForeignKey("facilities.id"), nullable=False, index=True)
     category = Column(String(50), nullable=False)
-    severity = Column(String(20), default="WARNING")
+    severity = Column(String(20), default="WARNING", index=True)
     title = Column(String(150), nullable=False)
     description = Column(Text, nullable=False)
     entity_type = Column(String(50), nullable=True)
     entity_id = Column(String(50), nullable=True)
     recommended_action = Column(Text, nullable=False)
-    status = Column(String(30), default="Active")
+    status = Column(String(30), default="Active", index=True)
     created_at = Column(DateTime, default=utcnow)
     resolved_at = Column(DateTime, nullable=True)
 
@@ -164,8 +164,8 @@ class ActivityLog(Base):
     __tablename__ = "activity_logs"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    facility_id = Column(String(50), nullable=True)
+    facility_id = Column(String(50), nullable=True, index=True)
     action_type = Column(String(50), nullable=False)
     description = Column(Text, nullable=False)
     user_role = Column(String(50), default="Healthcare Staff")
-    timestamp = Column(DateTime, default=utcnow)
+    timestamp = Column(DateTime, default=utcnow, index=True)

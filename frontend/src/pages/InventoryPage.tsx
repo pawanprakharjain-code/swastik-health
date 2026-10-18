@@ -202,6 +202,7 @@ export const InventoryPage: React.FC<InventoryPageProps> = ({
             <input
               type="text"
               placeholder="Search by brand name, generic formulation, or batch..."
+              aria-label="Search medicines by brand name, generic formulation, or batch"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal-500"
@@ -216,6 +217,7 @@ export const InventoryPage: React.FC<InventoryPageProps> = ({
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
+              aria-label="Filter medicines by therapeutic category"
               className="bg-transparent font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               {categories.map((c) => (
@@ -231,6 +233,7 @@ export const InventoryPage: React.FC<InventoryPageProps> = ({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              aria-label="Filter medicines by stock status"
               className="bg-transparent font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               <option value="All">All Stock Statuses</option>

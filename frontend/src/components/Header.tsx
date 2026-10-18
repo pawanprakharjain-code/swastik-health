@@ -52,6 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
             value={selectedFacility}
             onChange={(e) => onSelectFacility(e.target.value)}
             className="bg-transparent text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer pr-1"
+            aria-label="Select healthcare facility"
           >
             <option value="ALL">🌐 District Network (All Facilities)</option>
             {facilities.map((f) => (
@@ -68,6 +69,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={onAlertsClick}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition shadow-2xs"
             title="View priority alerts"
+            aria-label={`View ${activeAlertCount} priority alerts`}
           >
             <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
             <span>{activeAlertCount} Alert{activeAlertCount > 1 ? 's' : ''}</span>
@@ -84,6 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onExportCSV}
           className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-xs"
+          aria-label="Export current dataset as CSV"
         >
           <Download className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Export CSV</span>

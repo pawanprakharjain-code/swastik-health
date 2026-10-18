@@ -51,12 +51,15 @@ export const Modal: React.FC<ModalProps> = ({
 
       <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
           className={`relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full ${widthClasses[maxWidth]} border border-slate-200`}
         >
           {/* Header */}
           <div className="flex items-start justify-between border-b border-slate-100 p-6">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+              <h3 id="modal-title" className="text-lg font-bold text-slate-900">{title}</h3>
               {description && (
                 <p className="mt-1 text-xs text-slate-500">{description}</p>
               )}

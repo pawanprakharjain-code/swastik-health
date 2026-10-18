@@ -143,6 +143,7 @@ export const DoctorAttendancePage: React.FC<DoctorAttendancePageProps> = ({
             <select
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
+              aria-label="Filter clinicians by department"
               className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               {departments.map((d) => (
@@ -158,6 +159,7 @@ export const DoctorAttendancePage: React.FC<DoctorAttendancePageProps> = ({
             <select
               value={shiftFilter}
               onChange={(e) => setShiftFilter(e.target.value)}
+              aria-label="Filter clinicians by shift"
               className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               {shifts.map((s) => (

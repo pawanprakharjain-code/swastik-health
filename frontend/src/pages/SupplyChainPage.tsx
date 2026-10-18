@@ -179,6 +179,7 @@ export const SupplyChainPage: React.FC<SupplyChainPageProps> = ({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              aria-label="Filter transfer requests by status"
               className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
             >
               <option value="All">All Transfers</option>

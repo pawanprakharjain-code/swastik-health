@@ -28,12 +28,20 @@ app = FastAPI(
 )
 
 # CORS Middleware
-origins = os.getenv("CORS_ORIGINS", "*").split(",")
+cors_env = os.getenv("CORS_ORIGINS")
+if cors_env and cors_env.strip() != "*":
+    origins = [o.strip() for o in cors_env.split(",") if o.strip()]
+    allow_creds = True
+else:
+    # Wildcard origin with allow_credentials=False complies with W3C CORS & OWASP standards
+    origins = ["*"]
+    allow_creds = False
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins != ["*"] else ["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=origins,
+    allow_credentials=allow_creds,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -90,33 +98,27 @@ def list_medicines(
 @app.post("/api/medicines", response_model=schemas.MedicineOut, status_code=status.HTTP_201_CREATED, tags=["Medicines"])
 def create_medicine(med_in: schemas.MedicineCreate, db: Session = Depends(get_db)):
     med = crud.create_medicine(db, med_in)
-    return crud.get_medicines(db, facility_id=med.facility_id, search=med.name)[0]
+    return crud.format_medicine_out(med)
 
 @app.get("/api/medicines/{medicine_id}", response_model=schemas.MedicineOut, tags=["Medicines"])
 def get_medicine(medicine_id: str, db: Session = Depends(get_db)):
     med = crud.get_medicine_by_id(db, medicine_id)
     if not med:
         raise HTTPException(status_code=404, detail="Medicine not found")
-    meds = crud.get_medicines(db, search=med.name)
-    matched = [m for m in meds if m.id == medicine_id]
-    return matched[0] if matched else med
+    return crud.format_medicine_out(med)
 
 @app.patch("/api/medicines/{medicine_id}", response_model=schemas.MedicineOut, tags=["Medicines"])
 def update_medicine(medicine_id: str, updates: schemas.MedicineUpdate, db: Session = Depends(get_db)):
     med = crud.update_medicine(db, medicine_id, updates)
     if not med:
         raise HTTPException(status_code=404, detail="Medicine not found")
-    meds = crud.get_medicines(db, search=med.name)
-    matched = [m for m in meds if m.id == medicine_id]
-    return matched[0] if matched else med
+    return crud.format_medicine_out(med)
 
 @app.post("/api/medicines/{medicine_id}/receive", response_model=schemas.MedicineOut, tags=["Medicines"])
 def receive_stock(medicine_id: str, req: schemas.StockReceiptRequest, db: Session = Depends(get_db)):
     try:
         med = crud.receive_medicine_stock(db, medicine_id, req)
-        meds = crud.get_medicines(db, search=med.name)
-        matched = [m for m in meds if m.id == medicine_id]
-        return matched[0] if matched else med
+        return crud.format_medicine_out(med)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -124,9 +126,7 @@ def receive_stock(medicine_id: str, req: schemas.StockReceiptRequest, db: Sessio
 def adjust_stock(medicine_id: str, req: schemas.StockAdjustmentRequest, db: Session = Depends(get_db)):
     try:
         med = crud.adjust_medicine_stock(db, medicine_id, req)
-        meds = crud.get_medicines(db, search=med.name)
-        matched = [m for m in meds if m.id == medicine_id]
-        return matched[0] if matched else med
+        return crud.format_medicine_out(med)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -150,17 +150,31 @@ def compute_forecast_data(
     items: List[schemas.ForecastItem] = []
     crit_count = high_count = med_count = low_count = 0
 
-    for m in meds:
-        history = db.query(models.ConsumptionHistory).filter(
-            models.ConsumptionHistory.medicine_id == m.id
-        ).order_by(models.ConsumptionHistory.record_date).all()
+    med_ids = [m.id for m in meds]
 
-        inbound = db.query(models.StockTransfer).filter(
-            models.StockTransfer.destination_facility_id == m.facility_id,
-            models.StockTransfer.medicine_id == m.id,
+    # Batch fetch all consumption histories for these medicines in 1 query
+    history_by_med: Dict[str, List[models.ConsumptionHistory]] = {m_id: [] for m_id in med_ids}
+    if med_ids:
+        all_histories = db.query(models.ConsumptionHistory).filter(
+            models.ConsumptionHistory.medicine_id.in_(med_ids)
+        ).order_by(models.ConsumptionHistory.record_date).all()
+        for h in all_histories:
+            history_by_med[h.medicine_id].append(h)
+
+    # Batch fetch all pending inbound transfers in 1 query
+    inbound_qty_by_med: Dict[tuple, int] = {}
+    if med_ids:
+        pending_transfers = db.query(models.StockTransfer).filter(
+            models.StockTransfer.medicine_id.in_(med_ids),
             models.StockTransfer.status == "Pending"
         ).all()
-        inbound_qty = sum(t.quantity for t in inbound)
+        for t in pending_transfers:
+            key = (t.destination_facility_id, t.medicine_id)
+            inbound_qty_by_med[key] = inbound_qty_by_med.get(key, 0) + t.quantity
+
+    for m in meds:
+        history = history_by_med.get(m.id, [])
+        inbound_qty = inbound_qty_by_med.get((m.facility_id, m.id), 0)
 
         item = calculate_medicine_forecast(
             medicine=m,

@@ -132,7 +132,7 @@ export const App: React.FC = () => {
   }, [loadData]);
 
   // Operational Handlers with Optimistic Updates
-  const handleAddMedicine = async (data: any) => {
+  const handleAddMedicine = async (data: Partial<Medicine>) => {
     try {
       await api.createMedicine(data);
       showToast(`Medicine '${data.name}' registered to inventory.`);
@@ -142,7 +142,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleReceiveStock = async (id: string, data: any) => {
+  const handleReceiveStock = async (id: string, data: { quantity: number; batch_number?: string; supplier?: string; reason?: string }) => {
     try {
       await api.receiveStock(id, data);
       showToast(`Received ${data.quantity} units into inventory.`);
@@ -152,7 +152,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleAdjustStock = async (id: string, data: any) => {
+  const handleAdjustStock = async (id: string, data: { new_quantity: number; reason: string }) => {
     try {
       await api.adjustStock(id, data);
       showToast(`Stock updated to ${data.new_quantity}. Ledger reason recorded.`);
@@ -171,7 +171,6 @@ export const App: React.FC = () => {
       const res = await api.recalculateForecast(selectedFacility);
       setForecastData(res);
       showToast('AI demand forecast recalculated from multi-week telemetry.');
-      await loadData();
     } catch (err: any) {
       showToast(`Forecast error: ${err.message}`);
     }
@@ -181,7 +180,7 @@ export const App: React.FC = () => {
     try {
       const res = await api.getForecast(selectedFacility, safetyDays);
       setForecastData(res);
-    } catch (err) {
+    } catch {
       // silent catch for slider drag
     }
   };
@@ -189,8 +188,8 @@ export const App: React.FC = () => {
   const handleRegisterPatient = async (data: Partial<PatientQueueItem>) => {
     try {
       const res = await api.registerPatient(data);
+      setQueue((prev) => [res, ...prev]);
       showToast(`Token ${res.token} issued in ${res.department}.`);
-      await loadData();
     } catch (err: any) {
       showToast(`Registration error: ${err.message}`);
     }
@@ -200,40 +199,49 @@ export const App: React.FC = () => {
     id: string,
     status: 'Waiting' | 'In Consultation' | 'Completed'
   ) => {
+    setQueue((prev) =>
+      prev.map((q) => (q.id === id ? { ...q, queue_status: status } : q))
+    );
     try {
       await api.updatePatientStatus(id, { queue_status: status });
       showToast(`Patient queue status advanced to '${status}'.`);
-      await loadData();
     } catch (err: any) {
       showToast(`Queue update error: ${err.message}`);
+      await loadData();
     }
   };
 
   const handleToggleBed = async (bed: Bed) => {
-    const cycleMap: Record<string, string> = {
+    const cycleMap: Record<string, 'Available' | 'Occupied' | 'Cleaning'> = {
       Available: 'Occupied',
       Occupied: 'Cleaning',
       Cleaning: 'Available',
       'Out of service': 'Cleaning'
     };
     const nextStatus = cycleMap[bed.status] || 'Available';
+    setBeds((prev) =>
+      prev.map((b) => (b.id === bed.id ? { ...b, status: nextStatus, last_updated: new Date().toISOString() } : b))
+    );
     try {
       await api.updateBedStatus(bed.id, nextStatus);
       showToast(`Bed ${bed.bed_number} changed to '${nextStatus}'.`);
-      await loadData();
     } catch (err: any) {
       showToast(`Bed error: ${err.message}`);
+      await loadData();
     }
   };
 
   const handleToggleDoctor = async (doc: Doctor) => {
+    const nextStatus = !doc.is_present;
+    setDoctors((prev) =>
+      prev.map((d) => (d.id === doc.id ? { ...d, is_present: nextStatus, last_updated: new Date().toISOString() } : d))
+    );
     try {
-      const nextStatus = !doc.is_present;
       await api.updateDoctorAttendance(doc.id, nextStatus);
       showToast(`${doc.name} marked ${nextStatus ? 'Present' : 'Absent'}.`);
-      await loadData();
     } catch (err: any) {
       showToast(`Doctor roster error: ${err.message}`);
+      await loadData();
     }
   };
 
